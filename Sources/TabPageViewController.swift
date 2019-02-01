@@ -45,7 +45,6 @@ open class TabPageViewController: UIPageViewController {
 
         setupPageViewController()
         setupScrollView()
-        updateNavigationBar()
     }
 
     override open func viewWillAppear(_ animated: Bool) {
@@ -63,8 +62,8 @@ open class TabPageViewController: UIPageViewController {
     override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        updateNavigationBar()
         tabView.layouted = true
+        tabItems.forEach { $0.viewController.viewDidAppear(animated) }
     }
 
     override open func viewWillDisappear(_ animated: Bool) {
@@ -90,7 +89,7 @@ public extension TabPageViewController {
             self?.shouldScrollCurrentBar = true
             self?.beforeIndex = index
         }
-
+        nextViewControllers.forEach { $0.viewWillAppear(animated) }
         setViewControllers(
             nextViewControllers,
             direction: direction,
