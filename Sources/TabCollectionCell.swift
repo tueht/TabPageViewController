@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TabCollectionCell: UICollectionViewCell {
+public class TabCollectionCell: UICollectionViewCell {
 
     var tabItemButtonPressedBlock: (() -> Void)?
     var option: TabPageOption = TabPageOption() {
@@ -23,7 +23,7 @@ class TabCollectionCell: UICollectionViewCell {
             invalidateIntrinsicContentSize()
         }
     }
-    var isCurrent: Bool = false {
+    public var isCurrent: Bool = false {
         didSet {
             currentBarView.isHidden = !isCurrent
             if isCurrent {
@@ -32,6 +32,7 @@ class TabCollectionCell: UICollectionViewCell {
                 unHighlightTitle()
             }
             currentBarView.backgroundColor = option.currentColor
+            option.configureTabCell?(self)
             layoutIfNeeded()
         }
     }
@@ -40,13 +41,13 @@ class TabCollectionCell: UICollectionViewCell {
     @IBOutlet fileprivate weak var currentBarView: UIView!
     @IBOutlet fileprivate weak var currentBarViewHeightConstraint: NSLayoutConstraint!
 
-    override func awakeFromNib() {
+    override public func awakeFromNib() {
         super.awakeFromNib()
 
         currentBarView.isHidden = true
     }
 
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
+    override public func sizeThatFits(_ size: CGSize) -> CGSize {
         if item.count == 0 {
             return CGSize.zero
         }
@@ -63,7 +64,7 @@ class TabCollectionCell: UICollectionViewCell {
 // MARK: - View
 
 extension TabCollectionCell {
-    override var intrinsicContentSize : CGSize {
+    override public var intrinsicContentSize : CGSize {
         let width: CGFloat
         if let tabWidth = option.tabWidth , tabWidth > 0.0 {
             width = tabWidth
@@ -85,12 +86,12 @@ extension TabCollectionCell {
 
     func highlightTitle() {
         itemLabel.textColor = option.currentColor
-        itemLabel.font = UIFont.boldSystemFont(ofSize: option.fontSize)
+        itemLabel.font = option.font
     }
 
     func unHighlightTitle() {
         itemLabel.textColor = option.defaultColor
-        itemLabel.font = UIFont.systemFont(ofSize: option.fontSize)
+        itemLabel.font = option.font
     }
 }
 
